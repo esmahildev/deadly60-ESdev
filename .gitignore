@@ -1,0 +1,35 @@
+# Third-party game material: decompiled code, game binaries, dumps. Never commit or publish.
+analysis/as3_scripts/
+analysis/swf/
+analysis/tools_scripts/
+analysis/README.txt
+*.swf
+*.exe
+*.fla
+*.sol
+*.mp3
+*.dmp
+
+# FFDec / build output and backups of the original game
+work/
+build/
+out/
+patched/
+backup/
+backups/
+*.bak
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*credential*
+*secret*
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
