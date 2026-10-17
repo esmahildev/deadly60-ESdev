@@ -1,6 +1,6 @@
 # Deadly 60 — Rollout Stage 3 record (atomic 60-night switch)
 
-**STATUS: BUILT; 3 of 4 static gates PASSED; the SOURCE-DIFF GATE FAILED. Stage 3 is NOT marked passed. Runtime behavior is NOT verified.**
+**STATUS: BUILT; 3 of 4 static gates PASSED; the SOURCE-DIFF GATE FAILED as run. A later static review (no Java, section 6) found the two unexpected lines to be line-wrapping only and prepared an amended allowed-residual list, which has NOT been used to re-run the gate. Stage 3 is NOT marked passed. Runtime behavior is NOT verified.**
 
 Date: 2026-10-17. Branch: `stage-3/atomic-60-night-switch`, created from `stage-2/cutscene-option-y` at 6fdb3793d2c2a082298fe322468128f1806213b1. Not merged into `main`. This record replaces the earlier blocker record (660fdf4), which covered the period when the memory gate was failing. The patch, SWF and lab artifacts stay in the isolated lab and are not in Git; this record contains no source code.
 
@@ -52,9 +52,25 @@ The two unexpected lines are the decompiler's rendering of the long night-name a
 
 So the failure appears to be a prediction error about line wrapping, not an unintended code difference. **It has not been waived.** No allowed list was amended and the gate was not re-run. Resolving it needs a decision: either re-evaluate the saved export (no Java) with an explicitly reviewed amended allowed list that adds the two wrapped lines, or another agreed treatment.
 
-## 6. Limitations
+## 6. Review of the source-diff failure (static, no Java; added after the failure)
 
-- Source-diff gate failed (above); Stage 3 is not a pass until that is resolved by an explicit decision.
+Authorized scope: only the already-saved export and existing artifacts; nothing was regenerated, no Java/FFDec/Ruffle/game/save was used, and no source, patch, SWF, export or build artifact was modified. The original gate result above is unchanged and stays recorded as FAILED.
+
+**Artifacts used** (all in `D:\Projects\deadly30_lab\game\`): saved export `d60_rollout\stage3\gate_results\S3_ATOMIC_1\export\scripts\…\Nights.as` (24,535 bytes, 138 lines); baseline `src_baseline\…\Nights.as`; Stage 3 target (git-applied scratch copy, 24,524 bytes, 137 lines, SHA-256 `9B3ED869…209E`) which is byte-identical to the `Nights.as` the build actually compiled; Stage 1 patch; the saved `gates.json`; the pre-registered list `allowed_stage3.txt` (81 entries, SHA-256 prefix `8B97FBB7C698F5E8`, unchanged).
+
+**The two unexpected residual lines.** They are lines 13 and 14 of the exported `Nights.as`: line 13 (1,041 characters) starts the night-name array statement and ends with the name "Giants no like Germans, part 2"; line 14 (434 characters) starts with a nine-space indent, a comma and "The Giants gather", and ends with "Final Night Deadly 60" followed by the closing bracket and semicolon. In the Stage 3 source the same statement is one 1,466-character line. Joining line 13 with line 14 after removing the continuation indent equals the source line **exactly**; the rest of the file (export lines 15 onward) equals the source lines 14 onward, so the export has exactly one more physical line than the source. Observation only (I did not verify FFDec's wrapping rule): the longest line anywhere in the baseline decompile is 1,028 characters, so the new 1,466-character statement is the first line longer than any previously decompiled one.
+
+**Structural comparison of the saved export with the Stage 3 target** (parsed statements, ordered values, not line counts): 59 names, 60 wave rows and 60 caps in both; names equal as escaped text and unescaped, with no per-name mismatch; every row and every cap equal, with no per-item mismatch; the statements alternate array/amount 60 times in both; the only empty row is index 59 in both; quote balance is even. Cross-checks of the export against the approved Stage 0 record: night 30 (name index 28 "Thought we were done?", cap 11, queue) matches; rows and caps for nights 30–59 all match the record; names for nights 30–60 (index = night − 2) match; night 56 equals option 56-B6 (length 196, 6 RedMen) and night 58 equals option 58-C8 (length 203, 8 RedMen); row 59 is `[]` with cap 2. The Stage 1 additions are preserved (names 29–58, rows and caps 30–59 equal to the Stage 1 patch) and the original data is preserved (names 0–27, rows and caps 0–28 equal to the baseline). The parsing was reliable for this format; no limitation was found.
+
+**Complete residual picture** (96 lines): the 15 documented residuals are all present. `Level.as` (12), `HUD.as` (2) and `MainTimeline.as` (4, besides its one documented metadata line) match the intended changes derived from the compiled sources exactly, as multisets. In `Nights.as` the observed residuals equal the intended ones except that the single intended names line is replaced by the two wrapped lines, and the two normalized wrapped lines concatenated equal the normalized single line exactly. The other 61 `Nights.as` residual lines are identical to the intended ones. No missing, added, reordered or altered name or data was found.
+
+**Conclusion (static, conclusive):** the two unexpected lines are solely one long array statement printed across two physical lines.
+
+**Amended allowed-residual list (reviewed, NOT re-run).** `d60_rollout\stage3\allowed_stage3_amended.txt`, 83 entries, SHA-256 `C650E0D7B4EAD7F79F9C9D4E3D81F0ECC11D536C0603A34855958A1FB202F983`: the original 81 entries plus exactly the two observed wrapped lines (a new file; the original list is untouched). It is justified because it adds nothing but the wrapped rendering of a statement whose content was proven equal, and it does not allow any other difference that was observed. Slack to be aware of: two original pre-registered entries were never observed (the one-line names rendering and a decompiler-inversion variant of the cutscene bound); they are harmless but could be pruned. A dry membership check in memory (not the gate function, no Java) found 2 residual lines outside expected-15 plus the original list and 0 outside expected-15 plus the amended list. This is supporting evidence only, **not** a gate pass: the gate has not been re-run and the original failure stands.
+
+## 7. Limitations
+
+- Source-diff gate failed as run (section 4); the static review (section 6) supports treating it as a wrapping artifact, but Stage 3 is not recorded as passed until a gate run with the amended list is separately authorized and executed.
 - Runtime behavior is unverified (night 30 → 31, the night 60 finale, Continue/load, cutscenes, original-save loading); runtime acceptance is reserved for Stage 5. FFDec's AS3 compiler is experimental.
 - B5 Lite remains an evidence-based deferral, **not** a per-file round-trip pass.
 - No real save was opened, hashed or copied; no SAVE folder, generator or launcher exists; Ruffle and the game were not launched.
