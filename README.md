@@ -13,6 +13,7 @@ This repository holds **planning and audit documents only**. It deliberately con
 | `stage-2-plan` | Stage 2 — Implementation plan | `analysis/stage2_implementation_plan.md` |
 | `stage-3-feasibility` | Stage 3 — Technical feasibility test | `analysis/stage3_feasibility_report.md` |
 | `stage-3b-runtime` | Stage 3b — Test environment (runtime) | `analysis/stage3b_runtime_report.md` |
+| `stage-3b-acceptance` | Stage 3b — Acceptance check (gameplay, original vs rebuilt, saves) | `analysis/stage3b_acceptance_report.md` |
 
 Stages 4-5 (incremental implementation, final verification) get their branch when that stage starts and is approved.
 Merges into `main` are made by the repository owner.
