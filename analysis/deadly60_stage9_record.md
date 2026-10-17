@@ -45,8 +45,8 @@ Numbers are first-pass and unplaytested. The Rapid Repeater uses fire delay 2 (3
 - Not verified: everything visual or interactive (shop icon size and clicking, glow, banner/help layout, balance, any gameplay).
 
 ## 7. Candidates
-- `S9_SAFE_2`: `stage9uilds\S9_SAFE_2\deadly30.swf`, 19,295,949 bytes, SHA-256 `543FEC4823BDBF314E5468116FD0B649CF41460EEFAE27F3F665379F38E04D0A`.
-- `S9_SHOP_2` (experimental): `stage9uilds\S9_SHOP_2\deadly30.swf`, 19,297,868 bytes, SHA-256 `6C68E6A8C884637C281FD8CDF558FFAA1029359B61E450016F81D617004335F3`.
+- `S9_SAFE_2`: `stage9\builds\S9_SAFE_2\deadly30.swf`, 19,295,949 bytes, SHA-256 `543FEC4823BDBF314E5468116FD0B649CF41460EEFAE27F3F665379F38E04D0A`.
+- `S9_SHOP_2` (experimental): `stage9\builds\S9_SHOP_2\deadly30.swf`, 19,297,868 bytes, SHA-256 `6C68E6A8C884637C281FD8CDF558FFAA1029359B61E450016F81D617004335F3`.
 (both under `D:\Projects\deadly30_lab\game\d60_rollout\`)
 
 ## 8. Fallbacks
