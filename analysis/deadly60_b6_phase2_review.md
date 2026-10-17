@@ -75,9 +75,21 @@ Other reference values: SV1 `53318EA5…7F6B85`, SV2 `AC43FAEA…0F70F4`, SV3 `2
 - Only then the SV0 run on the original SWF, with the expected load trace (`LOADED STRING`, then `DAY!`, no `SAVE STRING`) and the menu text. Route A (a Ruffle-authored fresh-game file) remains the fallback if the format check fails.
 - Synthetic results will never be presented as compatibility with the owner's real saves, and the Night 60 finale still requires direct human play.
 
-## 8. Approval requested now
+## 8. Phase 2b result: SV0 dry run (added after the owner authorized only the dry run)
 
-1. Run the generator **dry run** for SV0 (writes nothing), and, if it matches section 5, the `--write` run that creates the two SV0 files.
+Executed once, with no `--write`, with Ruffle, Java, the launcher and the original EXE not involved:
+
+- **Command:** `python -I -B "D:\Projects\deadly30_lab\game\d60_rollout\SAVE\tools\gen_synthetic_save.py" --case SV0`; **exit code 0**.
+- **Before running:** the generator hash equalled the reviewed value (`DA71455A…F1E0`); its path is inside `SAVE\tools\`; the source shows the only `open` call inside `write_new`, reached only after the `if not args.write` branch returns (line 268-270); `inputs\` was empty.
+- **Output:** `case=SV0 intent=valid bytes=113 sha256=0D15E321EB5CDD2A99437F7E6F86F862873BB81F82729DE97E665BCF50D6FC2D`, `saveString=12,5075,1,1,1,1,15,200,18,0|0|2|1,2,3||`, `self-check=PASS`, the two computed target paths, and `DRY RUN: nothing was written`. No `WROTE` line.
+- **Comparison with the independent reference (section 5):** size 113 = 113 and SHA-256 equal; the saveString equals the reference. **Match.**
+- **After running:** `inputs\` still empty (0 items); `SV0.sol` and `SV0.manifest.txt` do not exist; no cache directory was created under `SAVE`; the generator file is unchanged; no Ruffle or java process.
+
+What this shows: the generator's builder and the independent second implementation agree byte for byte for SV0, and the dry run writes nothing. What it does not show: that the container layout is what Ruffle or the game accepts (still an unverified assumption, decided by SV0 itself). **Deadly 60 is not runtime-verified.**
+
+## 9. Approval requested now
+
+1. (Done in section 8, matched the reference.) Run the generator with `--write` for SV0, creating exactly `inputs\SV0.sol` (113 bytes) and `inputs\SV0.manifest.txt`.
 2. Permission to write the launcher and preflight **source** and review it statically (no execution), as Phase 2c.
 
 SV0 itself (any Ruffle launch) will be requested separately.
