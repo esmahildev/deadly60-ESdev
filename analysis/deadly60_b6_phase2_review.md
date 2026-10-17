@@ -87,9 +87,20 @@ Executed once, with no `--write`, with Ruffle, Java, the launcher and the origin
 
 What this shows: the generator's builder and the independent second implementation agree byte for byte for SV0, and the dry run writes nothing. What it does not show: that the container layout is what Ruffle or the game accepts (still an unverified assumption, decided by SV0 itself). **Deadly 60 is not runtime-verified.**
 
-## 9. Approval requested now
+## 9. Phase 2b result: SV0 written (owner authorized writing the SV0 files only)
 
-1. (Done in section 8, matched the reference.) Run the generator with `--write` for SV0, creating exactly `inputs\SV0.sol` (113 bytes) and `inputs\SV0.manifest.txt`.
+- **Preconditions checked first:** branch `stage-5/b6-phase2b-dryrun` at 7590dc4bd6f9dda3d3e0f30b3fffc05b64680032 with the same remote head; generator SHA-256 `DA71455A…F1E0` unchanged; `inputs\` empty; neither target existed; the source still has the exclusive-create `open` (the only code-level `open` call), the path check with the reparse-point test, the existing-target refusal and the dry-run guard; no Ruffle or java process.
+- **Command:** `python -I -B "D:\Projects\deadly30_lab\game\d60_rollout\SAVE\tools\gen_synthetic_save.py" --case SV0 --write`; **exit code 0**. Output: `case=SV0 intent=valid bytes=113 sha256=0D15E321…FC2D`, the saveString `12,5075,1,1,1,1,15,200,18,0|0|2|1,2,3||`, `self-check=PASS`, the two target paths and `WROTE: … SV0.sol and … SV0.manifest.txt`.
+- **Created exactly two files** under `SAVE\inputs\`: `SV0.sol` (113 bytes, SHA-256 `0D15E321EB5CDD2A99437F7E6F86F862873BB81F82729DE97E665BCF50D6FC2D`, equal to the reference; ordinary file, not a reparse point) and `SV0.manifest.txt` (296 bytes). `inputs\` holds 2 items; no cache directory; no other file appeared under `SAVE`; the generator and `ISOLATION.txt` are unchanged.
+- **Manifest:** names case SV0, intent valid, build original, shared object `so_deadly301`, `nightsLasted=11`, the saveString above, `bytes=113`, the same SHA-256, and the line that the container format is assumed and unverified until SV0 runs.
+- **Independent parse of the written file** (our own synthetic file, in memory): header length = file size − 6, tag `TCSO`, name `so_deadly301`, properties `nightsLasted` = 11.0 and `saveString` as above, every byte consumed.
+- **Deviations:** none. (A first attempt to run the precondition check failed on a quoting error in my check script before anything ran; it touched nothing and was re-run.)
+- **Not done:** no Ruffle, Java, launcher or original EXE; no SV0 runtime test; no other case written; no real save, backup, metadata or `acceptance\savetest` access; no change to game code, binaries or the generator.
+- **Not claimed:** that Ruffle or the game accepts this container layout. That remains unverified until the SV0 run. The generated files are lab artifacts and are not in Git. **Deadly 60 is not runtime-verified.**
+
+## 10. Approval requested now
+
+1. (Done: dry run in section 8, write in section 9.) The two SV0 files exist.
 2. Permission to write the launcher and preflight **source** and review it statically (no execution), as Phase 2c.
 
 SV0 itself (any Ruffle launch) will be requested separately.
