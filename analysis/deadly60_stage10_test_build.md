@@ -28,3 +28,6 @@ Progress folder `DEMO\saves\FULL_UNLOCK_TEST` only (Ruffle `--storage disk`). `S
 
 ## Update (stage 11): new-weapon cards
 The four experimental shop weapons were replaced by Wave Cannon, Gravity Gauntlet, Flamethrower and Tesla Rifle (shop cards drawn from the owner's concept art, a NEW GUNS page button, distinct firing effects), plus six-digit scrap font fixes. Test build FULL_UNLOCK_TEST_3 (stage11\builds), 19,455,330 bytes, SHA-256 948F46912B10378B399C1A0603C187A3E9B42E16E88AD62EF9E3D07186CC43AB. Static checks only; not played.
+
+## Update (stages 12-13): in-hand art, effects, sounds
+The four new weapons show concept-art guns in the soldier's hands (cut-out sprites added to the arms animation), coloured HUD weapon names, bigger firing effects, and five synthesised sound effects (new DefineSound tags + trigger sprites in the HUD; 22.05 kHz PCM; flamethrower uses no-overlap playback). The sounds are procedural and have only been checked numerically (no clipping, durations, spectra), not heard. Test build FULL_UNLOCK_TEST_5 (stage13\builds), 19,612,500 bytes, SHA-256 D89AB72796728EA36786F96E545AB7586EE5CE4F1D42C5400641F3475832BA09.
