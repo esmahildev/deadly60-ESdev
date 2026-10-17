@@ -109,9 +109,34 @@ Lab file `SAVE\tools\launch_sv.ps1` (18,152 bytes, SHA-256 `5AE909AECC4053F78614
 - **Static review (parse only, then a syntax-tree audit):** 0 parse errors; ASCII only; no `Remove-Item`, `Move-Item`, `Rename-Item`, `Stop-Process`, `Invoke-Expression`, web calls, `Set-Content`/`Add-Content`/`Out-File`, `Add-Type` or jobs; no `.Kill(`, no `taskkill`; `CloseMainWindow` present; exactly one `Start-Process` (Ruffle); three `Copy-Item` calls (SWF source to `run\`, the synthetic file into the session, screenshots into the session); read-type commands only on the manifest, the run's own log, the session listing and file hashes; the only environment variable referenced is `RUST_LOG`; no line names a real-save location outside the forbidden-fragment list; the only external command is the hash-pinned input helper. Noted: `-Force` appears once, only to read directory attributes in the reparse-point check.
 - **Limits:** the review shows what the script can and cannot do; its logic has never been executed, so defects can still show up in the preflight-only run, which is why that run comes first. Expected side effects outside the session: new PNGs in the harness `runtime_tmp\shots` folder (named with the tag) and Ruffle's own config folder updates, as in the earlier runs.
 
-## 11. Approval requested now
+## 11. SV0 runtime result (original build): PASS, the synthetic file format is accepted
+
+Run under the owner's explicit approval of the two-step sequence. Verified before running: launcher `5AE909AE…FE2A4`, generator, `SV0.sol` (113 bytes, `0D15E321…FC2D`) and manifest unchanged; free memory 2.78 GiB.
+
+**Step 1, preflight only** (`launch_sv.ps1 -Build original -Case SV0 -Tag V1_SV0_ORIG_PF -PreflightOnly`): **PASS**, exit 0, nothing launched; only `sessions\V1_SV0_ORIG_PF\preflight.json` was created; no problems listed; memory gate 2.88 GiB. (An earlier attempt exited with code 5 at the memory gate, with free memory at 0.47 GiB, and created nothing.)
+
+**Step 2, runtime** (`launch_sv.ps1 -Build original -Case SV0 -Tag V2_SV0_ORIG_RUN -Launch`): exit code 0, classification `LOAD_OK`. Observed in Ruffle on the original SWF (pinned hash, copy in `SAVE\run\`), with in-lab disk storage only:
+
+| Criterion | Observed |
+|---|---|
+| Menu shows the synthetic key | trace `NIGHTS LASTED: 11`; the menu screenshot reads "You Lasted 11 Nights" with CONTINUE enabled |
+| Loaded string equals the input | `LOADED STRING = 12,5075,1,1,1,1,15,200,18,0\|0\|2\|1,2,3\|\|` (identical) |
+| No `SAVE STRING` | none in the trace; the load trace is `LOADED STRING`, then `DAY!` |
+| No AVM2 errors | 0 error lines, stderr empty |
+| Graceful close | one close request sufficed; no Ruffle, window or java process afterwards |
+| Restored state | the screenshot after Continue shows the HUD "DAWN 12", scrap 5,075, 200 rifle-class ammo, 1 medkit, weapon MP-40 30/30 and the safe room ("Sleep Till Night"); the loader's enemy-unlock traces `NEW ENEMY:1,2,3,4,6,5` appeared |
+
+What this establishes: the hand-built container (Route B) **is read by Ruffle and by the original game**, Continue loads a night-12 checkpoint from disk storage, and the source-derived load trace (no checkpoint rewrite) matches what happened. This is the first runtime observation of the Continue path. It is the original build only; it says nothing yet about the candidate, nights above 12 or the counter after a death, and nothing about the owner's real saves.
+
+Side observations: Ruffle rewrote the session's own copy of the file at exit (124 bytes against the 113-byte input, a Ruffle-authored serialization of the same data); the input in `inputs\` is unchanged; the lowest free memory during the run was 1.98 GiB (the gate applies at launch). No key was sent before the menu appeared on its own.
+
+Evidence (lab only, not in Git): `SAVE\sessions\V2_SV0_ORIG_RUN\` with `result.json` (`97914CC9…`), `traces.txt` (`E0D1C75A…`), `ruffle.out.txt` (`C925536…`), `V2_SV0_ORIG_RUN_menu.png` (`BFCB9D9D…`), `V2_SV0_ORIG_RUN_loaded.png` (`DCB06AB7…`). Launcher, generator, `SV0.sol` and manifest remained unchanged. No real save, backup, metadata or `acceptance\savetest` was accessed; no original EXE or second runtime instance was launched. **Deadly 60 is not runtime-verified.**
+
+## 12. Approval requested now
 
 1. (Done: dry run in section 8, write in section 9.) The two SV0 files exist.
 2. (Done in section 10.) The launcher and preflight source exist and passed the static review.
 
-**One approval needed for the next step:** (a) a **preflight-only** run, `launch_sv.ps1 -Build original -Case SV0 -Tag <new tag> -PreflightOnly`, which launches nothing and creates only `sessions\<tag>\preflight.json`; and, if it passes, (b) the **SV0 run** on the original SWF, `launch_sv.ps1 -Build original -Case SV0 -Tag <another new tag> -Launch`: one Ruffle window, the memory gate, in-lab disk storage only, graceful close, no real save involved.
+3. (Done in section 11.) SV0 passed on the original build.
+
+**One approval needed for the next step (the rest of the matrix with the same reviewed tools):** (a) write the remaining synthetic cases with the generator (`--write`, one case at a time, create-new, in `SAVE\inputs\`); (b) original-build cases SV3, SV4, SV5, SV6, SV1, SV2 (predicted failures and boundaries); (c) candidate-build cases NIGHT_05, NIGHT_25, SV1/SV2, NIGHT_34, NIGHT_35, NIGHT_55, NIGHT_59 and KEY_30/59/60, each as preflight-only then launch with a new tag, one Ruffle window at a time under the memory gate. The Night 60 finale itself will still need a person to play it.
