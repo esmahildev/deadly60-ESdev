@@ -25,3 +25,6 @@ Status: **compile/static checks only; not played. A test tool, not a release can
 
 ## Isolation
 Progress folder `DEMO\saves\FULL_UNLOCK_TEST` only (Ruffle `--storage disk`). `SHOP_CHEAT`, other builds, the real save and `acceptance\savetest` are untouched. `-Reset` moves progress to a backup folder; nothing is deleted.
+
+## Update (stage 11): new-weapon cards
+The four experimental shop weapons were replaced by Wave Cannon, Gravity Gauntlet, Flamethrower and Tesla Rifle (shop cards drawn from the owner's concept art, a NEW GUNS page button, distinct firing effects), plus six-digit scrap font fixes. Test build FULL_UNLOCK_TEST_3 (stage11\builds), 19,455,330 bytes, SHA-256 948F46912B10378B399C1A0603C187A3E9B42E16E88AD62EF9E3D07186CC43AB. Static checks only; not played.
