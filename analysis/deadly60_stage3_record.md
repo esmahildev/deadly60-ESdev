@@ -1,6 +1,6 @@
 # Deadly 60 — Rollout Stage 3 record (atomic 60-night switch)
 
-**STATUS: BUILT; 3 of 4 static gates PASSED; the SOURCE-DIFF GATE FAILED as run. A later static review (no Java, section 6) found the two unexpected lines to be line-wrapping only and prepared an amended allowed-residual list, which has NOT been used to re-run the gate. Stage 3 is NOT marked passed. Runtime behavior is NOT verified.**
+**STATUS: BUILT; all four static gates now recorded as PASSED, with one qualification: the SOURCE-DIFF GATE FAILED as originally run (section 4) and PASSED only on a documented re-run against the already-saved export with a reviewed amended allowed-residual list (sections 6 and 7). Static gates only: runtime behavior is NOT verified.**
 
 Date: 2026-10-17. Branch: `stage-3/atomic-60-night-switch`, created from `stage-2/cutscene-option-y` at 6fdb3793d2c2a082298fe322468128f1806213b1. Not merged into `main`. This record replaces the earlier blocker record (660fdf4), which covered the period when the memory gate was failing. The patch, SWF and lab artifacts stay in the isolated lab and are not in Git; this record contains no source code.
 
@@ -66,11 +66,25 @@ Authorized scope: only the already-saved export and existing artifacts; nothing 
 
 **Conclusion (static, conclusive):** the two unexpected lines are solely one long array statement printed across two physical lines.
 
-**Amended allowed-residual list (reviewed, NOT re-run).** `d60_rollout\stage3\allowed_stage3_amended.txt`, 83 entries, SHA-256 `C650E0D7B4EAD7F79F9C9D4E3D81F0ECC11D536C0603A34855958A1FB202F983`: the original 81 entries plus exactly the two observed wrapped lines (a new file; the original list is untouched). It is justified because it adds nothing but the wrapped rendering of a statement whose content was proven equal, and it does not allow any other difference that was observed. Slack to be aware of: two original pre-registered entries were never observed (the one-line names rendering and a decompiler-inversion variant of the cutscene bound); they are harmless but could be pruned. A dry membership check in memory (not the gate function, no Java) found 2 residual lines outside expected-15 plus the original list and 0 outside expected-15 plus the amended list. This is supporting evidence only, **not** a gate pass: the gate has not been re-run and the original failure stands.
+**Amended allowed-residual list (reviewed; the later re-run is in section 7).** `d60_rollout\stage3\allowed_stage3_amended.txt`, 83 entries, SHA-256 `C650E0D7B4EAD7F79F9C9D4E3D81F0ECC11D536C0603A34855958A1FB202F983`: the original 81 entries plus exactly the two observed wrapped lines (a new file; the original list is untouched). It is justified because it adds nothing but the wrapped rendering of a statement whose content was proven equal, and it does not allow any other difference that was observed. Slack to be aware of: two original pre-registered entries were never observed (the one-line names rendering and a decompiler-inversion variant of the cutscene bound); they are harmless but could be pruned. A dry membership check in memory (not the gate function, no Java) found 2 residual lines outside expected-15 plus the original list and 0 outside expected-15 plus the amended list. This was supporting evidence only, **not** a gate pass: at the time of this review the gate had not been re-run, and the original failure stays recorded.
 
-## 7. Limitations
+## 7. Source-diff gate re-run with the amended list (authorized separately; no Java)
 
-- Source-diff gate failed as run (section 4); the static review (section 6) supports treating it as a wrapping artifact, but Stage 3 is not recorded as passed until a gate run with the amended list is separately authorized and executed.
+Preconditions re-verified before the run: HEAD 5c5581ef1d194cc1fdfdfd35901656e3b180b63f equal to the remote head; build SWF `FC719920…E9EF`; the saved export has 381 files and `Nights.as` `D547D10A…`; the amended list hashes to `C650E0D7B4EAD7F79F9C9D4E3D81F0ECC11D536C0603A34855958A1FB202F983` and consists of the exact bytes of the original 81-entry list plus two appended entries, both `Nights.as` additions (the wrapped names-array lines); the original list is unchanged (`8B97FBB7…`).
+
+Gate interface (read from `harness\gates.ps1`, not guessed): `Gate-Source <Swf> <ResultDir> [<ExportDir>] [<AllowedFile>]`. If `ExportDir` is empty the function deletes `<ResultDir>\export` and runs a Java export; if `ExportDir` is given it skips the export and compares that scripts folder with the baseline, requiring 381 files, using the expected-15 residuals plus the allowed file. I passed the saved `…\S3_ATOMIC_1\export\scripts` folder explicitly and a **new** result folder, so the saved export could not be deleted or overwritten. The gate implementation was not changed.
+
+Memory gate (fail-closed, immediately before the run): **2.96 GiB** (required 2.00 GiB), passed. The explicit `ExportDir` path starts no Java process; the java process count was 0 before and after.
+
+Run: a child PowerShell process dot-sourced `gates.ps1` and called `Gate-Source` on `…\builds\S3_ATOMIC_1\deadly30.swf` with the saved export scripts folder and `allowed_stage3_amended.txt`. **Exit code 0** (about 15 s). Result: `source-diff-gate pass=True :: files=381 residual lines=96 expected=15 unexpected=0 expected-but-absent=0`. Evidence: `d60_rollout\stage3\gate_results\S3_ATOMIC_1_srcdiff_rerun_amended\gate_result.json`.
+
+Integrity after the run: the saved export tree digest (hash over all 381 file hashes) is unchanged; the build SWF, the amended list and the original list are unchanged; the original `gates.json` still records the first source-diff result as failed. Only the source-diff gate was re-run: nothing was rebuilt, the manifest, hook and tag gates were not repeated, and no real save, Ruffle or game was involved.
+
+What this pass means and does not mean: it is a static gate pass on the same saved export, not on a fresh build, and the amended list was derived after the failure was observed, so its validity rests on the independent review in section 6 (names, rows and caps equal; residuals of the other files exactly the intended lines; the two added lines being one statement split in two), not on pre-registration. The original failure is preserved above.
+
+## 8. Limitations
+
+- The source-diff gate passed only after the reviewed amendment (sections 6 and 7); the original run failed.
 - Runtime behavior is unverified (night 30 → 31, the night 60 finale, Continue/load, cutscenes, original-save loading); runtime acceptance is reserved for Stage 5. FFDec's AS3 compiler is experimental.
 - B5 Lite remains an evidence-based deferral, **not** a per-file round-trip pass.
 - No real save was opened, hashed or copied; no SAVE folder, generator or launcher exists; Ruffle and the game were not launched.
