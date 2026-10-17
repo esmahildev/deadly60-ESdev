@@ -38,7 +38,7 @@ Accepted low items: mine/wire anchoring uses the fence bounds at purchase/draw t
 Suggested in-game checks from the review: Mk II on the Laser Gun and Golden AK, a mine after travelling to another room, a Bloater on the roof, Continue after buying wire/plate/mines.
 
 ## 5b. Final candidate
-`D:\Projects\deadly30_lab\game\d60_rollout\stage8uilds\S8_FEATURES_2\deadly30.swf`, 19,295,362 bytes, SHA-256 `88BCB2C816DF037CDA6A05E3B6222B39B37A4453FC9017A5E3E639607EA72F6E`. Manifest, hook-marker and tag gates passed; exported scripts differ from the Stage 7 candidate in exactly Controller, Enemy, Weapon, Zombie.
+`D:\Projects\deadly30_lab\game\d60_rollout\stage8\builds\S8_FEATURES_2\deadly30.swf`, 19,295,362 bytes, SHA-256 `88BCB2C816DF037CDA6A05E3B6222B39B37A4453FC9017A5E3E639607EA72F6E`. Manifest, hook-marker and tag gates passed; exported scripts differ from the Stage 7 candidate in exactly Controller, Enemy, Weapon, Zombie.
 
 ## 6. Not done / not verified
 - New weapon models with their own shop slots (section 1).
