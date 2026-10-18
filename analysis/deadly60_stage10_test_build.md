@@ -11,7 +11,7 @@ Status: **compile/static checks only; not played. A test tool, not a release can
 | Start at night 10 | `saveString` field 0 = 10 (the game's own counter; "DAWN 10", then night 11). `-Night N` starts elsewhere (2..59) after `-Reset` |
 | Continue | `nightsLasted` = N-1 is present, which is what the menu checks. Also in the code (all later checkpoints): a checkpoint now writes `nightsLasted`, so closing the window mid-game no longer disables Continue |
 | People | the game has three survivors (skins 0 American, 1 Russian, 2 German; the "Union" medal is the full crew); all three are in the save's survivor list (they are on the player's side, as for any recruited survivor). Their weapons: Golden AK-47, Alien Laser Gun, Striker |
-| Weapons | all 12 originals + the four Stage 9 weapons (ids 31-34) in the bought list; every shop entry is marked found by the existing survival-mode path; the new weapons' night locks are 0 |
+| Weapons | all 12 originals + the four experimental weapons (ids 31-34; the Stage 9 set at the time, replaced by Wave Cannon / Gravity Gauntlet / Flamethrower / Tesla Rifle from Stage 11, see below) in the bought list; every shop entry is marked found by the existing survival-mode path; the new weapons' night locks are 0 |
 | Scrap | exactly 999999 in the save; no code resets it |
 | Upgrades | every weapon at damage/reload/magazine 3 and Mk II, Endurance 3, Scavenger 3, Plating 3, Wire 3 (the optional `d60` key, matching night and scrap); armor 3, fence 5, boots 3; 9 medkits; ammo 999 per type; player level 20 |
 | Day-30 / night-40 locks | hotkeys (U I O J K H G B T L) work at any night; Mines (T) are bought with scrap as usual |
